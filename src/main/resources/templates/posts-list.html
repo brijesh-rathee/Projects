@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f7f7f7;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        a.create-post {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .post {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .post-title {
+            font-size: 20px;
+            margin: 0 0 10px;
+            color: #222;
+        }
+
+        .excerpt {
+            margin: 5px 0;
+            font-style: italic;
+            color: #555;
+        }
+
+        .author {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .tags {
+            margin-top: 10px;
+        }
+
+        .tag {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 4px 10px;
+            margin-right: 5px;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 12px;
+        }
+
+        .read-more {
+            margin-top: 15px;
+        }
+
+        .read-more a {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .read-more a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Blog Posts</h1>
+
+<a th:href="@{/posts/new}" class="create-post">+ Create Post</a>
+
+<div th:each="post : ${posts}" class="post">
+    <h2 class="post-title" th:text="${post.title}">Post Title</h2>
+    <p class="excerpt"><strong>Excerpt:</strong> <span th:text="${post.excerpt}">Post excerpt</span></p>
+    <p class="author"><strong>Author:</strong> <span th:text="${post.author}">Author Name</span></p>
+
+    <div class="tags">
+        <strong>Tags:</strong>
+        <span th:each="tag : ${post.tags}" class="tag" th:text="${tag.name}">Tag</span>
+    </div>
+
+    <div class="read-more">
+        <a th:href="@{/posts/view(postId=${post.id})}">Read More</a>
+    </div>
+</div>
+
+</body>
+</html>

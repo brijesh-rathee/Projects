@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${post.title}">Post Title</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        background-color: #f9f9f9;
+        color: #333;
+    }
+
+    h1 {
+        color: #222;
+        margin-bottom: 10px;
+    }
+
+    .meta {
+        margin-bottom: 20px;
+    }
+
+    .meta p {
+        margin: 5px 0;
+    }
+
+    .content {
+        margin-bottom: 20px;
+    }
+
+    .tags {
+        margin-top: 10px;
+    }
+
+    .tag {
+        display: inline-block;
+        background-color: #e0e0e0;
+        color: #333;
+        padding: 5px 10px;
+        margin: 2px;
+        border-radius: 15px;
+        font-size: 14px;
+    }
+
+    .back-link {
+        margin-top: 30px;
+    }
+
+    .back-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .back-link a:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<h1 th:text="${post.title}">Post Title</h1>
+
+<div class="meta">
+  <p><strong>Author:</strong> <span th:text="${post.author}">Author</span></p>
+  <p><strong>Published At:</strong> <span th:text="${post.publishedAt}">Publish Date</span></p>
+  <p><strong>Last Updated:</strong> <span th:text="${post.updatedAt}">Update Date</span></p>
+</div>
+
+<div class="content">
+  <h3>Content</h3>
+  <p th:text="${post.content}">Post content here...</p>
+</div>
+
+<div class="tags">
+  <h4>Tags</h4>
+  <span th:each="tag : ${post.tags}" class="tag" th:text="${tag.name}">Tag</span>
+</div>
+
+<div class="back-link">
+  <a th:href="@{/posts/list}">← Back to Posts</a>
+</div>
+
+</body>
+</html>

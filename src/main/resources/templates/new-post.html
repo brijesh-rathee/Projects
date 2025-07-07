@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Blog Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 120px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .link {
+            margin-top: 20px;
+            display: block;
+        }
+
+        .link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Create New Blog Post</h1>
+
+<form th:action="@{/posts/save}" method="post" th:object="${post}">
+    <label>Title:
+        <input type="text" th:field="*{title}" required/>
+    </label>
+
+    <label>Excerpt:
+        <input type="text" th:field="*{excerpt}" required/>
+    </label>
+
+    <label>Content:
+        <textarea th:field="*{content}" required></textarea>
+    </label>
+
+    <label>Author:
+        <input type="text" th:field="*{author}" required/>
+    </label>
+
+    <label>Tags (comma separated):
+        <input type="text" name="tags" required/>
+    </label>
+
+    <button type="submit">Create Post</button>
+</form>
+
+<div class="link">
+    <a th:href="@{/posts/list}">← View All Posts</a>
+</div>
+
+</body>
+</html>
