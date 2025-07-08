@@ -14,4 +14,6 @@ public interface PostService {
 
     //find the post by id
     Post findById(int id);
+
+    void deleteById(int id);
 }

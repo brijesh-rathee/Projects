@@ -79,6 +79,7 @@
 <h1>Create New Blog Post</h1>
 
 <form th:action="@{/posts/save}" method="post" th:object="${post}">
+    <input type="hidden" th:field="*{id}">
     <label>Title:
         <input type="text" th:field="*{title}" required/>
     </label>
@@ -96,7 +97,7 @@
     </label>
 
     <label>Tags (comma separated):
-        <input type="text" name="tags" required/>
+        <input type="text" name="tagNames" th:value="${#strings.listJoin(post.tags.?[name != null].![name], ', ')}" required/>
     </label>
 
     <button type="submit">Create Post</button>

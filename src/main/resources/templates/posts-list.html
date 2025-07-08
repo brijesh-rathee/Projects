@@ -32,21 +32,17 @@
         }
 
         .post-title {
-            font-size: 20px;
+            font-size: 22px;
             margin: 0 0 10px;
             color: #222;
         }
 
-        .excerpt {
+        .excerpt,
+        .author,
+        .published {
             margin: 5px 0;
-            font-style: italic;
-            color: #555;
-        }
-
-        .author {
             font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
+            color: #555;
         }
 
         .tags {
@@ -91,7 +87,10 @@
     <h2 class="post-title" th:text="${post.title}">Post Title</h2>
     <p class="excerpt"><strong>Excerpt:</strong> <span th:text="${post.excerpt}">Post excerpt</span></p>
     <p class="author"><strong>Author:</strong> <span th:text="${post.author}">Author Name</span></p>
-
+    <p class="published">
+        <strong>Published At:</strong>
+        <span th:text="${#temporals.format(post.publishedAt, 'dd MMM yyyy HH:mm')}">Published Date</span>
+    </p>
     <div class="tags">
         <strong>Tags:</strong>
         <span th:each="tag : ${post.tags}" class="tag" th:text="${tag.name}">Tag</span>

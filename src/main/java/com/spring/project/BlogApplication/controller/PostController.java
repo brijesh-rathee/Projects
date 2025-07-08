@@ -1,5 +1,6 @@
 package com.spring.project.BlogApplication.controller;
 
+import com.spring.project.BlogApplication.entity.Comment;
 import com.spring.project.BlogApplication.entity.Post;
 import com.spring.project.BlogApplication.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +56,12 @@ public class PostController {
     public String viewPost(@RequestParam("postId") int id, Model model) {
         // find post by id
         Post post = postService.findById(id);
+        Comment newComment = new Comment();
+        newComment.setPost(post);
 
         //add to model
         model.addAttribute("post", post);
+        model.addAttribute("newComment", newComment);
 
         return "view-post";
     }
@@ -73,5 +77,11 @@ public class PostController {
 
         //send over to form
         return "new-post";
+    }
+
+    @GetMapping("/delete")
+    public String deletePost(@RequestParam("postId") int id) {
+        postService.deleteById(id);
+        return "redirect:/posts/list";
     }
 }

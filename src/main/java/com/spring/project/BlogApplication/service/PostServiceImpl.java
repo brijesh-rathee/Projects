@@ -47,13 +47,28 @@ public class PostServiceImpl implements PostService{
             }
         }
 
-        post.setTags(tagSet);
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
-        post.setPublished(true);
-        post.setPublishedAt(LocalDateTime.now());
+        if(post.getId() != 0) {
+            // it's a update
+            Post existingPost = postRepository.findById(post.getId())
+                    .orElseThrow(() -> new RuntimeException("Post not found with id : " + post.getId()));
 
-        postRepository.save(post);
+            existingPost.setTitle(post.getTitle());
+            existingPost.setExcerpt(post.getExcerpt());
+            existingPost.setContent(post.getContent());
+            existingPost.setTags(tagSet);
+            existingPost.setUpdatedAt(LocalDateTime.now());
+
+            postRepository.save(existingPost);
+        } else {
+            // it's a new post
+            post.setCreatedAt(LocalDateTime.now());
+            post.setUpdatedAt(LocalDateTime.now());
+            post.setPublished(true);
+            post.setPublishedAt(LocalDateTime.now());
+            post.setTags(tagSet);
+
+            postRepository.save(post);
+        }
     }
 
     @Override
@@ -66,5 +81,11 @@ public class PostServiceImpl implements PostService{
             throw new RuntimeException("Did not found post by id - " + id);
         }
         return thePost;
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(int id) {
+        postRepository.deleteById(id);
     }
 }
