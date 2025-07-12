@@ -83,6 +83,12 @@
 
 <a th:href="@{/posts/new}" class="create-post">+ Create Post</a>
 
+<form action="#" method="get" style="margin-bottom: 20px;">
+    <input type="text" name="search" placeholder="Search posts..."
+           th:value="${search}" />
+    <button type="submit">Search</button>
+</form>
+
 <div th:each="post : ${posts}" class="post">
     <h2 class="post-title" th:text="${post.title}">Post Title</h2>
     <p class="excerpt"><strong>Excerpt:</strong> <span th:text="${post.excerpt}">Post excerpt</span></p>
@@ -99,6 +105,30 @@
     <div class="read-more">
         <a th:href="@{/posts/view(postId=${post.id})}">Read More</a>
     </div>
+</div>
+
+<!-- PAGINATION CONTROLS -->
+<div class="pagination" style="margin-top: 30px;">
+    <ul style="list-style: none; display: flex; gap: 10px; padding: 0;">
+
+        <!-- Previous button -->
+        <li th:if="${currentPage > 0}">
+            <a th:href="@{/posts/list(page=${currentPage - 1}, search=${search})}">&laquo; Prev</a>
+        </li>
+
+        <!-- Page numbers -->
+        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/posts/list(page=${i}, search=${search})}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? 'active-page' : ''"></a>
+        </li>
+
+        <!-- Next button -->
+        <li th:if="${currentPage < totalPages - 1}">
+            <a th:href="@{/posts/list(page=${currentPage + 1}, search=${search})}">Next &raquo;</a>
+        </li>
+
+    </ul>
 </div>
 
 </body>

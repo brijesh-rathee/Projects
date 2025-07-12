@@ -1,13 +1,15 @@
 package com.spring.project.BlogApplication.service;
 
 import com.spring.project.BlogApplication.entity.Post;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface PostService {
 
     //show all post
-    List<Post> findAll();
+    Page<Post> findAll(int page, int size);
 
     //create new post
     void save(Post post, String tags);
@@ -15,5 +17,9 @@ public interface PostService {
     //find the post by id
     Post findById(int id);
 
+    //delete post by id
     void deleteById(int id);
+
+    //search by keyword
+    Page<Post> searchPosts(String keyword, int pageNumber, int pageSize);
 }

@@ -5,6 +5,9 @@ import com.spring.project.BlogApplication.entity.Post;
 import com.spring.project.BlogApplication.entity.Tag;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,8 +29,8 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> findAll() {
-        return postRepository.findAll();
+    public Page<Post> findAll(int page, int size) {
+        return postRepository.findAll(PageRequest.of(page, size));
     }
 
     @Override
@@ -87,5 +90,12 @@ public class PostServiceImpl implements PostService{
     @Transactional
     public void deleteById(int id) {
         postRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Post> searchPosts(String keyword, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        return postRepository.searchPosts(keyword,pageable);
     }
 }
