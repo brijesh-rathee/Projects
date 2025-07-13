@@ -3,13 +3,14 @@ package com.spring.project.BlogApplication.service;
 import com.spring.project.BlogApplication.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
 public interface PostService {
 
     //show all post
-    Page<Post> findAll(int page, int size);
+    Page<Post> findAll(int page, int size, String sortDirection);
 
     //create new post
     void save(Post post, String tags);
@@ -21,5 +22,5 @@ public interface PostService {
     void deleteById(int id);
 
     //search by keyword
-    Page<Post> searchPosts(String keyword, int pageNumber, int pageSize);
+    Page<Post> searchPosts(String keyword, int pageNumber, int pageSize, String sortDirection);
 }

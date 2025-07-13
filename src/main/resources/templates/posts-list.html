@@ -89,6 +89,20 @@
     <button type="submit">Search</button>
 </form>
 
+<form action="#" method="get" style="margin-bottom: 20px;">
+    <!-- Retain search value when sorting -->
+    <input type="hidden" name="search" th:value="${search}" />
+    <!-- Reset page to 0 when sorting -->
+    <input type="hidden" name="page" value="0" />
+
+    <label for="sortDirection">Sort by:</label>
+    <select name="sortDirection" id="sortDirection">
+        <option value="desc" th:selected="${sortDirection == 'desc'}">Newest First</option>
+        <option value="asc" th:selected="${sortDirection == 'asc'}">Oldest First</option>
+    </select>
+    <button type="submit">Apply</button>
+</form>
+
 <div th:each="post : ${posts}" class="post">
     <h2 class="post-title" th:text="${post.title}">Post Title</h2>
     <p class="excerpt"><strong>Excerpt:</strong> <span th:text="${post.excerpt}">Post excerpt</span></p>
@@ -107,25 +121,29 @@
     </div>
 </div>
 
+<div th:if="${search != null and search != '' and posts.isEmpty()}">
+    <p>No posts found for "<span th:text="${search}">search</span>".</p>
+</div>
+
 <!-- PAGINATION CONTROLS -->
-<div class="pagination" style="margin-top: 30px;">
+<div class="pagination" style="margin-top: 30px;" th:if="${totalPages > 0}">
     <ul style="list-style: none; display: flex; gap: 10px; padding: 0;">
 
         <!-- Previous button -->
         <li th:if="${currentPage > 0}">
-            <a th:href="@{/posts/list(page=${currentPage - 1}, search=${search})}">&laquo; Prev</a>
+            <a th:href="@{/posts/list(page=${currentPage - 1}, sortDirection=${sortDirection}, search=${search})}">&laquo; Prev</a>
         </li>
 
         <!-- Page numbers -->
         <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:href="@{/posts/list(page=${i}, search=${search})}"
+            <a th:href="@{/posts/list(page=${i}, sortDirection=${sortDirection}, search=${search})}"
                th:text="${i + 1}"
                th:classappend="${i == currentPage} ? 'active-page' : ''"></a>
         </li>
 
         <!-- Next button -->
         <li th:if="${currentPage < totalPages - 1}">
-            <a th:href="@{/posts/list(page=${currentPage + 1}, search=${search})}">Next &raquo;</a>
+            <a th:href="@{/posts/list(page=${currentPage + 1}, sortDirection=${sortDirection}, search=${search})}">Next &raquo;</a>
         </li>
 
     </ul>

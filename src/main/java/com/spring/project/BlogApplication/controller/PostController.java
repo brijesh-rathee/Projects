@@ -5,6 +5,7 @@ import com.spring.project.BlogApplication.entity.Post;
 import com.spring.project.BlogApplication.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,15 +28,16 @@ public class PostController {
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
+            @RequestParam(value = "sortDirection", defaultValue = "desc") String sortDirection,
             Model model) {
 
         //find all posts
         Page<Post> postsPage;
         if (search != null && !search.isEmpty()) {
-            postsPage = postService.searchPosts(search, page, size);
+            postsPage = postService.searchPosts(search, page, size, sortDirection);
         }
         else {
-            postsPage = postService.findAll(page, size);
+            postsPage = postService.findAll(page, size, sortDirection);
         }
 
         //set to model contains page info, total pages, posts etc.
@@ -48,6 +50,8 @@ public class PostController {
         model.addAttribute("totalPages", postsPage.getTotalPages());
         //to retain search text in input box
         model.addAttribute("search", search);
+        //to add sort direction
+        model.addAttribute("sortDirection", sortDirection);
 
         return "posts-list";
     }
