@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,5 +33,10 @@ public class TagServiceImpl implements TagService{
         tag.setUpdatedAt(LocalDateTime.now());
 
         return tagRepository.save(tag);
+    }
+
+    @Override
+    public List<String> getAllTags() {
+        return tagRepository.findAllTagNames();
     }
 }

@@ -6,147 +6,307 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f7f7f7;
+            margin: 0;
+            background: white;
+            color: black;
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
+        /* Navbar */
+        .navbar {
+            background: white;
+            border-bottom: 1px solid black;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        a.create-post {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #4a90e2;
-            text-decoration: none;
+        .navbar a {
+            font-size: 20px;
             font-weight: bold;
+            color: black;
+            text-decoration: none;
+        }
+
+        .navbar form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .navbar input[type="text"], .navbar select, .navbar button {
+            padding: 6px;
+            font-size: 14px;
+            border: 1px solid black;
+            background: white;
+            color: black;
+        }
+
+        .navbar button {
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            padding: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            padding-right: 20px;
+            border-right: 1px solid black;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: sticky;
+            top: 20px;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding-left: 20px;
+        }
+
+        /* Filters */
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-checkbox {
+            display: none;
+        }
+
+        .filter-label {
+            font-weight: bold;
+            display: block;
+            padding: 8px;
+            border: 1px solid black;
+            cursor: pointer;
+            background: #f9f9f9;
+        }
+
+        .filter-options {
+            display: none;
+            border: 1px solid #ccc;
+            border-top: none;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background: white;
+        }
+
+        .filter-checkbox:checked + .filter-label + .filter-options {
+            display: block;
+        }
+
+        .filter-options label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar button {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        /* Posts grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
         }
 
         .post {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border: 1px solid black;
+            padding: 15px;
+            border-radius: 4px;
+            background: white;
         }
 
         .post-title {
-            font-size: 22px;
-            margin: 0 0 10px;
-            color: #222;
+            font-weight: bold;
+            font-size: 18px;
         }
 
-        .excerpt,
-        .author,
-        .published {
-            margin: 5px 0;
+        .post-meta {
             font-size: 14px;
-            color: #555;
+            margin: 5px 0;
         }
 
         .tags {
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .tag {
-            background-color: #e0e0e0;
-            color: #333;
-            padding: 4px 10px;
-            margin-right: 5px;
-            border-radius: 5px;
             display: inline-block;
+            border: 1px solid #888;
+            padding: 2px 8px;
             font-size: 12px;
-        }
-
-        .read-more {
-            margin-top: 15px;
+            border-radius: 4px;
+            margin-right: 4px;
         }
 
         .read-more a {
-            background-color: #007bff;
-            color: #fff;
-            padding: 8px 14px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 14px;
+            text-decoration: underline;
+            color: black;
         }
 
-        .read-more a:hover {
-            background-color: #0056b3;
+        /* Pagination */
+        .pagination {
+            margin-top: 30px;
+        }
+
+        .pagination ul {
+            list-style: none;
+            display: flex;
+            gap: 10px;
+            padding: 0;
+        }
+
+        .pagination li a {
+            padding: 4px 10px;
+            border: 1px solid black;
+            text-decoration: none;
+            color: black;
+        }
+
+        .pagination li a.active-page {
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid black;
+                padding-bottom: 20px;
+                margin-bottom: 20px;
+            }
+
+            .content {
+                padding-left: 0;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .navbar form {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .navbar input, .navbar select, .navbar button {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
 
-<h1>Blog Posts</h1>
-
-<a th:href="@{/posts/new}" class="create-post">+ Create Post</a>
-
-<form action="#" method="get" style="margin-bottom: 20px;">
-    <input type="text" name="search" placeholder="Search posts..."
-           th:value="${search}" />
-    <button type="submit">Search</button>
-</form>
-
-<form action="#" method="get" style="margin-bottom: 20px;">
-    <!-- Retain search value when sorting -->
-    <input type="hidden" name="search" th:value="${search}" />
-    <!-- Reset page to 0 when sorting -->
-    <input type="hidden" name="page" value="0" />
-
-    <label for="sortDirection">Sort by:</label>
-    <select name="sortDirection" id="sortDirection">
-        <option value="desc" th:selected="${sortDirection == 'desc'}">Newest First</option>
-        <option value="asc" th:selected="${sortDirection == 'asc'}">Oldest First</option>
-    </select>
-    <button type="submit">Apply</button>
-</form>
-
-<div th:each="post : ${posts}" class="post">
-    <h2 class="post-title" th:text="${post.title}">Post Title</h2>
-    <p class="excerpt"><strong>Excerpt:</strong> <span th:text="${post.excerpt}">Post excerpt</span></p>
-    <p class="author"><strong>Author:</strong> <span th:text="${post.author}">Author Name</span></p>
-    <p class="published">
-        <strong>Published At:</strong>
-        <span th:text="${#temporals.format(post.publishedAt, 'dd MMM yyyy HH:mm')}">Published Date</span>
-    </p>
-    <div class="tags">
-        <strong>Tags:</strong>
-        <span th:each="tag : ${post.tags}" class="tag" th:text="${tag.name}">Tag</span>
-    </div>
-
-    <div class="read-more">
-        <a th:href="@{/posts/view(postId=${post.id})}">Read More</a>
-    </div>
+<!-- Navbar -->
+<div class="navbar">
+    <a th:href="@{/posts/list}">My Blog Application</a>
+    <form method="get">
+        <input type="text" name="search" placeholder="Search" th:value="${search}" />
+        <select name="sortDirection">
+            <option value="desc" th:selected="${sortDirection == 'desc'}">Newest</option>
+            <option value="asc" th:selected="${sortDirection == 'asc'}">Oldest</option>
+        </select>
+        <button type="submit">Search</button>
+    </form>
 </div>
 
-<div th:if="${search != null and search != '' and posts.isEmpty()}">
-    <p>No posts found for "<span th:text="${search}">search</span>".</p>
-</div>
+<div class="container">
+    <!-- Sidebar Filters -->
+    <form method="get" class="sidebar">
+        <!-- Author Filter -->
+        <div class="filter-group">
+            <input type="checkbox" id="authorToggle" class="filter-checkbox" />
+            <label for="authorToggle" class="filter-label">Filter by Author</label>
+            <div class="filter-options">
+                <div th:each="author : ${authors}">
+                    <label>
+                        <input type="checkbox" name="authors"
+                               th:value="${author}"
+                               th:checked="${selectedAuthors != null and selectedAuthors.contains(author)}" />
+                        <span th:text="${author}">Author</span>
+                    </label>
+                </div>
+            </div>
+        </div>
 
-<!-- PAGINATION CONTROLS -->
-<div class="pagination" style="margin-top: 30px;" th:if="${totalPages > 0}">
-    <ul style="list-style: none; display: flex; gap: 10px; padding: 0;">
+        <!-- Tag Filter -->
+        <div class="filter-group">
+            <input type="checkbox" id="tagToggle" class="filter-checkbox" />
+            <label for="tagToggle" class="filter-label">Filter by Tags</label>
+            <div class="filter-options">
+                <div th:each="tag : ${tags}">
+                    <label>
+                        <input type="checkbox" name="tags"
+                               th:value="${tag}"
+                               th:checked="${selectedTags != null and selectedTags.contains(tag)}" />
+                        <span th:text="${tag}">Tag</span>
+                    </label>
+                </div>
+            </div>
+        </div>
 
-        <!-- Previous button -->
-        <li th:if="${currentPage > 0}">
-            <a th:href="@{/posts/list(page=${currentPage - 1}, sortDirection=${sortDirection}, search=${search})}">&laquo; Prev</a>
-        </li>
+        <button type="submit">Apply Filters</button>
+    </form>
 
-        <!-- Page numbers -->
-        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:href="@{/posts/list(page=${i}, sortDirection=${sortDirection}, search=${search})}"
-               th:text="${i + 1}"
-               th:classappend="${i == currentPage} ? 'active-page' : ''"></a>
-        </li>
+    <!-- Blog Posts -->
+    <div class="content">
+        <div class="posts-grid">
+            <div th:each="post : ${posts}" class="post">
+                <div class="post-title" th:text="${post.title}">Post Title</div>
+                <div class="post-meta">Author: <span th:text="${post.author}">Author</span></div>
+                <div class="post-meta">Published: <span th:text="${#temporals.format(post.publishedAt, 'dd/MM/yyyy')}">Date</span></div>
+                <div class="post-meta" th:text="${post.excerpt}">Excerpt...</div>
+                <div class="tags">
+                    <span class="tag" th:each="tag : ${post.tags}" th:text="${tag.name}">Tag</span>
+                </div>
+                <div class="read-more">
+                    <a th:href="@{/posts/view(postId=${post.id})}">Read More</a>
+                </div>
+            </div>
+        </div>
 
-        <!-- Next button -->
-        <li th:if="${currentPage < totalPages - 1}">
-            <a th:href="@{/posts/list(page=${currentPage + 1}, sortDirection=${sortDirection}, search=${search})}">Next &raquo;</a>
-        </li>
+        <!-- No Results -->
+        <div th:if="${search != null and search != '' and posts.isEmpty()}">
+            <p>No posts found for "<span th:text="${search}">search</span>".</p>
+        </div>
 
-    </ul>
+        <!-- Pagination -->
+        <div class="pagination" th:if="${totalPages > 0}">
+            <ul>
+                <li th:if="${currentPage > 0}">
+                    <a th:href="@{/posts/list(page=${currentPage - 1}, sortDirection=${sortDirection}, search=${search}, authors=${selectedAuthors}, tags=${selectedTags})}">&laquo; Prev</a>
+                </li>
+
+                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                    <a th:href="@{/posts/list(page=${i}, sortDirection=${sortDirection}, search=${search}, authors=${selectedAuthors}, tags=${selectedTags})}"
+                       th:text="${i + 1}"
+                       th:classappend="${i == currentPage} ? 'active-page' : ''"></a>
+                </li>
+
+                <li th:if="${currentPage < totalPages - 1}">
+                    <a th:href="@{/posts/list(page=${currentPage + 1}, sortDirection=${sortDirection}, search=${search}, authors=${selectedAuthors}, tags=${selectedTags})}">Next &raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 </body>

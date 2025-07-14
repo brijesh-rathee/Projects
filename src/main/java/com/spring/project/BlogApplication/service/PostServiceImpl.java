@@ -106,4 +106,45 @@ public class PostServiceImpl implements PostService{
 
         return postRepository.searchPosts(keyword,pageable);
     }
+
+    @Override
+    public Page<Post> filterPosts(String keyword, List<String> authors, List<String> tags, int pageNumber, int pageSize, String sortDirection) {
+        Sort sort;
+        if (sortDirection.equalsIgnoreCase("asc")) sort = Sort.by("publishedAt").ascending();
+        else sort = Sort.by("publishedAt").descending();
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        boolean hasSearch = keyword != null && !keyword.isBlank();
+        boolean hasAuthors = authors != null && !authors.isEmpty();
+        boolean hasTags = tags != null && !tags.isEmpty();
+
+        if (hasSearch && hasAuthors && hasTags) {
+            return postRepository.findByKeywordAuthorsTags(keyword, authors, tags, pageable);
+        } else if (hasSearch && hasAuthors) {
+            return  postRepository.findByKeywordAndAuthors(keyword, authors, pageable);
+        } else if (hasSearch && hasTags) {
+            return postRepository.findByKeywordAndTags(keyword, tags, pageable);
+        } else if (hasAuthors && hasTags) {
+            return postRepository.findByAuthorsAndTags(authors, tags, pageable);
+        } else if (hasSearch) {
+            return postRepository.searchPosts(keyword, pageable);
+        } else if (hasAuthors) {
+            return postRepository.findByAuthors(authors, pageable);
+        } else if (hasTags) {
+            return postRepository.findByTags(tags, pageable);
+        } else {
+            return postRepository.findAll(pageable);
+        }
+    }
+
+    @Override
+    public List<String> getAllAuthors() {
+        return postRepository.findAllAuthors();
+    }
+
+    @Override
+    public List<String> getAllTags() {
+        return tagService.getAllTags();
+    }
 }

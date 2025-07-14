@@ -26,21 +26,36 @@ public class PostController {
     @GetMapping("/list")
     public String allPost(
             @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "authors", required = false) List<String> authors, // authors to select from dropdown
+            @RequestParam(value = "tags", required = false) List<String> tags, // tags to select from dropdown
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "sortDirection", defaultValue = "desc") String sortDirection,
             Model model) {
 
-        //find all posts
-        Page<Post> postsPage;
-        if (search != null && !search.isEmpty()) {
-            postsPage = postService.searchPosts(search, page, size, sortDirection);
-        }
-        else {
-            postsPage = postService.findAll(page, size, sortDirection);
+        //normalize empty filter before passing bcz if we pass null list it cause error
+        if (authors != null && authors.isEmpty()) authors = null;
+        if (tags != null && tags.isEmpty()) tags = null;
+        if (search != null && search.trim().isEmpty()) {
+            search = null;
         }
 
-        //set to model contains page info, total pages, posts etc.
+
+        //find all posts
+        Page<Post> postsPage;
+
+//        these are combined in filterPosts method so need to use them here
+//        if (search != null && !search.isEmpty()) {
+//            postsPage = postService.searchPosts(search, page, size, sortDirection);
+//        }
+//        else {
+//            postsPage = postService.findAll(page, size, sortDirection);
+//        }
+
+        postsPage = postService.filterPosts(search, authors, tags, page, size, sortDirection);
+
+//        Core post data
+        //set to model contains page info, total pages, posts etc. if we want to extract in thymeleaf
         model.addAttribute("postsPage", postsPage);
         //contains list of posts
         model.addAttribute("posts", postsPage.getContent());
@@ -48,10 +63,22 @@ public class PostController {
         model.addAttribute("currentPage", page);
         //total page
         model.addAttribute("totalPages", postsPage.getTotalPages());
+
+//        For UI filters
         //to retain search text in input box
         model.addAttribute("search", search);
         //to add sort direction
         model.addAttribute("sortDirection", sortDirection);
+        // to add authors
+        model.addAttribute("selectedAuthors", authors);
+        // to add tags
+        model.addAttribute("selectedTags", tags);
+
+//        Populate dropdowns
+        //list of authors
+        model.addAttribute("authors", postService.getAllAuthors());
+        //list of tags
+        model.addAttribute("tags", postService.getAllTags());
 
         return "posts-list";
     }

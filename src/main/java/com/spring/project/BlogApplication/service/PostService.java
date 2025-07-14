@@ -23,4 +23,13 @@ public interface PostService {
 
     //search by keyword
     Page<Post> searchPosts(String keyword, int pageNumber, int pageSize, String sortDirection);
+
+    // filter posts include searching also so no need of searchPosts
+    Page<Post> filterPosts(String keyword, List<String> authors, List<String> tags, int pageNumber, int pageSize, String sortDirection);
+
+    // find all authors from database for dropdown
+    List<String> getAllAuthors();
+
+    // find all tags from database for dropdown
+    List<String> getAllTags();
 }
